@@ -1,0 +1,41 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% load widget_tweaks %}
+
+    <form method="POST" class="post-form">  
+        {% csrf_token %}  
+       <div class="form-group pt-3">
+         <label> Code</label>
+         {% render_field form.Code class="form-control" placeholder="Enter product code" type="text" %}
+       </div>
+
+       <div class="form-group pt-3">
+        <label> Name</label>
+        {% render_field form.Name class="form-control" placeholder="Enter product name" type="text" %}
+      </div>
+ 
+      <div class="form-group pt-3">
+        <label> Description</label>
+        {% render_field form.Description class="form-control" placeholder="Enter product description" type="text" %}
+      </div>
+
+      <div class="form-group pt-3">
+        <label> Brand</label>
+        {% render_field form.Brand class="form-control" placeholder="Enter product Brand" type="select" %}
+      </div>
+      <div class="form-group pt-3">
+        <label> Category</label>
+        {% render_field form.Category class="form-control" placeholder="Enter product Category" type="select" %}
+      </div>
+
+      <div class="form-group pt-5">
+        <button type="submit" class="btn btn-success">Save Product</button>  
+      </div>
+            
+    </form>
+
+{% endblock %}  
+
