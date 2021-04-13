@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Brand, Category,Product
 from .serializers import BrandSerializer,CategorySerializer,ProductSerializer
 from rest_framework import generics
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
 from .forms import ProductForm
 
 def index(request):
@@ -22,6 +24,52 @@ def index(request):
         prodForm=ProductForm()    
         return render(request, 'index.html', {'form':prodForm})
 
+def signin(request):
+
+    if request.method=='POST':
+        try:
+            username=request.POST['username'] 
+            password=request.POST['password']
+
+            user =authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+
+            return HttpResponseRedirect('/crud')
+
+        except Exception as e:
+           print(e) 
+           return HttpResponseRedirect('/crud')
+
+    else:
+      
+        return render(request, 'signin.html')
+
+def signup(request):
+
+    if request.method=='POST':
+        try:
+            userfrom =UserCreationForm(request.POST)
+            
+            if userfrom.is_valid():
+                userfrom.save()
+                username=userfrom.cleaned_data.get('username')
+                password=userfrom.cleaned_data.get('password1')
+                user=authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return HttpResponseRedirect('index')
+                return HttpResponseRedirect('signup')
+        
+        except Exception as e:
+           print(e) 
+           return HttpResponseRedirect('/crud')
+
+    else:
+        userfrom=UserCreationForm()    
+        return render(request, 'signup.html',{'form':userfrom})
+
+   
 
 class BrandList(generics.ListCreateAPIView):
     queryset=Brand.objects.all()
